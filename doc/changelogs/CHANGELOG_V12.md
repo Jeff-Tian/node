@@ -10,6 +10,7 @@
 </tr>
 <tr>
 <td valign="top">
+<a href="#12.16.1">12.16.1</a><br/>
 <a href="#12.16.0">12.16.0</a><br/>
 <a href="#12.15.0">12.15.0</a><br/>
 <a href="#12.14.1">12.14.1</a><br/>
@@ -52,6 +53,50 @@
   * [0.10.x](CHANGELOG_V010.md)
   * [io.js](CHANGELOG_IOJS.md)
   * [Archive](CHANGELOG_ARCHIVE.md)
+
+<a id="12.16.1"></a>
+## 2020-02-14, Version 12.16.1 'Erbium' (LTS), @MylesBorins
+
+### Notable changes
+
+Node.js 12.16.0 included 4 regressions that are being fixed in this release
+
+**Accidental Unflagging of Self Resolving Modules**:
+
+12.16.0 included a large update to the ESM implementation. One of the new features,
+Self Referential Modules, was accidentally released without requiring the `--experimental-modules`
+flag. This release is being made to appropriately flag the feature.
+
+**Isolate Disposal Order Change Introduced WASM Assertion**:
+
+A change in the order of Isolate Disposal created an assertion error in WASM usage in V8. This was
+not present on 13.x or higher as they use a newer version of V8. The change was reverted. A regression
+test and fix are being worked on and will likely be included in a future 12.x release
+
+**Use Largepages Runtime Option Introduced Linking Failure**:
+
+A Semver-Minor change to introduce `--use-largepages` as a runtime option
+introduced a linking failure. This had been fixed in master but regressed as the fix has not yet gone out
+in a Current release. The feature has been reverted, but will be able to reland with a fix in a future
+Semver-Minor release.
+
+**Async Hooks was Causing an Exception When Handling Errors**:
+
+Changes in async hooks internals introduced a case where an internal api call could be called with undefined
+causing a process to crash. The change to async hooks was reverted. A regression test and fix has been proposed
+and the change could re land in a future Semver-Patch release if the regression is reliably fixed.
+
+### Commits
+
+* [[`e07237ce9f`](https://github.com/nodejs/node/commit/e07237ce9f)] - ***Revert*** "**async_hooks**: ensure proper handling in runInAsyncScope" (Myles Borins)
+* [[`b6b1d89034`](https://github.com/nodejs/node/commit/b6b1d89034)] - ***Revert*** "**build**: re-introduce --use-largepages as no-op" (Myles Borins) [#31782](https://github.com/nodejs/node/pull/31782)
+* [[`c87baba2df`](https://github.com/nodejs/node/commit/c87baba2df)] - ***Revert*** "**build**: switch realpath to pwd" (Myles Borins) [#31782](https://github.com/nodejs/node/pull/31782)
+* [[`b6e266d707`](https://github.com/nodejs/node/commit/b6e266d707)] - ***Revert*** "**build**: warn upon --use-largepages config option" (Myles Borins) [#31782](https://github.com/nodejs/node/pull/31782)
+* [[`f0b2d875d9`](https://github.com/nodejs/node/commit/f0b2d875d9)] - **module**: 12.x self resolve flag as experimental modules (Guy Bedford) [#31757](https://github.com/nodejs/node/pull/31757)
+* [[`2ea5c914a3`](https://github.com/nodejs/node/commit/2ea5c914a3)] - ***Revert*** "**src**: make --use-largepages a runtime option" (Myles Borins) [#31782](https://github.com/nodejs/node/pull/31782)
+* [[`70639a51c5`](https://github.com/nodejs/node/commit/70639a51c5)] - ***Revert*** "**src**: make large\_pages node.cc include conditional" (Myles Borins) [#31782](https://github.com/nodejs/node/pull/31782)
+* [[`d1301843ce`](https://github.com/nodejs/node/commit/d1301843ce)] - ***Revert*** "**src**: unregister Isolate with platform before disposing" (Myles Borins) [#31782](https://github.com/nodejs/node/pull/31782)
+* [[`7a5954ef26`](https://github.com/nodejs/node/commit/7a5954ef26)] - **src**: fix -Winconsistent-missing-override warning (Colin Ihrig) [#30549](https://github.com/nodejs/node/pull/30549)
 
 <a id="12.16.0"></a>
 ## 2020-02-11, Version 12.16.0 'Erbium' (LTS), @targos
